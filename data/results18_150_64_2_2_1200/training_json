@@ -1,0 +1,17 @@
+{
+    "min_len": 18,
+    "emsize": 150,
+    "nhid": 64,
+    "nlayers": 2,
+    "nhead": 2,
+    "dropout": 0.3,
+    "epochs": 40,
+    "batch_size": 1200,
+    "eval_batch_size": 10,
+    "clip": 0.25,
+    "bptt": 35,
+    "tied": true,
+    "log_interval": 2,
+    "ntokens": 10775,
+    "epoch": 40
+}
