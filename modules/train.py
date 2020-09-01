@@ -1,6 +1,5 @@
 import time
 import torch
-import torch.onnx
 import numpy as np
 from torch import nn
 from torch import cuda, device, save
@@ -91,19 +90,6 @@ def train(net, optimizer, loss_fn, data, ntokens, clip, epoch, bptt = 35, log_in
             start_time = time.time()
             temp_loss.append(float(cur_loss))
     return float(np.mean(temp_loss))
-
-def export_onnx(path, batch_size, seq_len):
-    """
-    From Pytorch doc:
-    https://pytorch.org/tutorials/beginner/transformer_tutorial.html
-    """
-
-    print('The net is also exported in ONNX format at {}'.
-          format(path))
-    net.eval()
-    dummy_input = torch.LongTensor(seq_len * batch_size).zero_().view(-1, batch_size).to(device)
-    hidden = net.init_hidden(batch_size)
-    torch.onnx.export(net, (dummy_input, hidden), path)
 
 
 def generate_text(n, state, words, net, w2i, ntokens, device = 'cuda'):
