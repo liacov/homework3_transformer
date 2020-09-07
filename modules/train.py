@@ -99,10 +99,7 @@ def generate_text(n, state, words, net, w2i, ntokens, device = 'cuda'):
     if word in words:
         input = torch.tensor(np.reshape(w2i(word), (1, -1))).long().to(device)
     else:
-        #print('No such words into the dictionary. Starting with random seed')
         input = torch.randint(ntokens, (1, 1), dtype=torch.long).to(device)
-        #print('Random seed: {}'.format(w2i.decode(input)))
-        #print('\n{}'.format(w2i.decode(input)), end=' ')
 
     # Generate next word
     with torch.no_grad():  # no tracking history
@@ -135,37 +132,37 @@ def generate_text(n, state, words, net, w2i, ntokens, device = 'cuda'):
 
     # Print next word following some given rules
     for i in state.split()[1:]:
-        #If it's the same word try again
+        # Avoid loops
         if i == previous:
             continue
 
-        #Update previou word
+        # Update
         previous = i
 
-        #Increment
+        # Increment
         new_line_counter += 1
 
-        #Signal the next letter must start in uppercase
+        # Flag: next word capitalized
         if i in upcase:
           after_point = True
 
-        #Signal there is a full stop and we start new_line
+        # Flag: start newline after a full point
         if i == '.' and new_line_counter > 10:
           new_line_counter = 0
           print('.')
 
-        #Signal there is a punktuation sign so we don't add anywhite space
+        # Flag: do not add whitespace, there is punctuation
         elif i in punc:
           print(i, end='')
           new_line_counter -= 1
 
-        #If there isn't any special char we add the word and the whitespace
+        # Print new word following flags
         else:
           if after_point:
             if new_line_counter > 1:
                 print(' {}'.format(i.capitalize()), end='')
                 after_point=False
-            #If it's a new line we don't add the white space
+            # After newline, no whitespace added
             else:
                 print('{}'.format(i.capitalize()), end='')
                 after_point=False
